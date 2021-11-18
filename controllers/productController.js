@@ -7,10 +7,8 @@ const create = async (req, res, next) => {
 
     const newProduct = await productService.create({ name, quantity });
 
-    if (newProduct.err) {
-      if (newProduct.err.code === 'invalid_data') {
-        return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ err: newProduct.err });
-      }
+    if (newProduct.err && newProduct.err.code === 'invalid_data') {
+      return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ err: newProduct.err });
     }
 
     return res.status(StatusCodes.CREATED).json(newProduct.ops[0]);
