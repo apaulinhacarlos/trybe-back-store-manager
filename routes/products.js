@@ -1,8 +1,8 @@
 const express = require('express');
-const create = require('../controllers/products/create');
+const productController = require('../controllers/productController');
 
 const router = express.Router({ mergeParams: true });
 
-router.post('/', create);
+router.post('/', productController.create);
 
 module.exports = router;
