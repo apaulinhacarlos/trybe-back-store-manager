@@ -32,12 +32,30 @@ const validateQuantity = (quantity) => {
   return false;
 };
 
+const validateNameInDB = async (product) => {
+  const { name } = product;
+  const findDB = await productModel.find(name);
+  const result = findDB.find((item) => item.name.toUpperCase().includes(name.toUpperCase()));
+
+  if (result) {
+    return {
+      err: {
+        code: 'invalid_data',
+        message: 'Product already exists',
+      },
+    };
+  }
+  return false;
+};
+
 const create = async (product) => {
   const name = validateName(product.name);
   const quantity = validateQuantity(product.quantity);
+  const nameInDB = await validateNameInDB(product);
 
   if (name) return name;
   if (quantity) return quantity;
+  if (nameInDB) return nameInDB;
 
   return productModel.create(product);
 };
