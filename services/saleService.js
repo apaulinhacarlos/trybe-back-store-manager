@@ -14,10 +14,25 @@ const create = async (sales) => {
   return saleModel.create({ itensSold: mappedSales });
 };
 
+const find = async () => saleModel.find();
+
+const findById = async (id) => {
+  const foundSale = await saleModel.findById(id);
+  if (!foundSale) {
+    return {
+      err: {
+        code: 'not_found',
+        message: 'Sale not found',
+      },
+    };
+  }
+  return foundSale; 
+};
+
 module.exports = {
   create,
-  // find,
-  // findById,
+  find,
+  findById,
   // update,
   // remove,
 };
