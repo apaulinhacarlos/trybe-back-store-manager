@@ -23,8 +23,23 @@ const findById = async (id) => {
   return product;
 };
 
+const update = async (document) => {
+  const { id, ...documentWithoutId } = document;
+  if (!ObjectId.isValid(id)) return false;
+
+  const product = (await connection())
+    .collection(collection)
+    .updateOne(
+      { _id: ObjectId(id) },
+      { $set: documentWithoutId },
+    );
+
+  return product;
+};
+
 module.exports = {
   create,
   find,
   findById,
+  update,
 };

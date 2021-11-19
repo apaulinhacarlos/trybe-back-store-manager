@@ -4,7 +4,6 @@ const productService = require('../services/productService');
 const create = async (req, res, next) => {
   try {
     const { name, quantity } = req.body;
-
     const newProduct = await productService.create({ name, quantity });
 
     if (newProduct.err && newProduct.err.code === 'invalid_data') {
@@ -47,8 +46,27 @@ const findById = async (req, res, next) => {
   }
 };
 
+const update = async (req, res, next) => {
+  try {
+    const { name, quantity } = req.body;
+    const { id } = req.params;
+
+    const updated = await productService.update({ id, name, quantity });
+
+    if (updated.err && updated.err.code === 'invalid_data') {
+      return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ err: updated.err });
+    }
+
+    const product = await productService.findById(id);
+    return res.status(StatusCodes.OK).json(product);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   create,
   find,
   findById,
+  update,
 };

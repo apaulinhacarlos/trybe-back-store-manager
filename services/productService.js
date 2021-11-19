@@ -32,8 +32,19 @@ const findById = async (id) => {
   return found; 
 };
  
+const update = async (product) => {
+  const name = validateName(product.name);
+  const quantity = validateQuantity(product.quantity);
+
+  if (name) return name;
+  if (quantity) return quantity;
+
+  return productModel.update(product);
+};
+
 module.exports = {
   create,
   find,
   findById,
+  update,
 };
