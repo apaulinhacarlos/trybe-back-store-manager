@@ -41,10 +41,22 @@ const remove = async (id) => (
     .collection(collection)
     .deleteOne({ _id: ObjectId(id) });
 
+const updateBySale = async (document) => {
+  const updatedDocument = (await connection())
+    .collection(collection)
+    .updateOne(
+      { _id: ObjectId(document[0].productId) },
+      { $inc: { quantity: -document[0].quantity } },
+    );
+
+  return updatedDocument;
+};
+
 module.exports = {
   create,
   find,
   findById,
   update,
   remove,
+  updateBySale,
 };

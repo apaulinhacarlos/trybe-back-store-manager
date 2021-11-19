@@ -1,5 +1,6 @@
 const saleModel = require('../models/saleModel');
 const { validateQuantity } = require('./salesUtils');
+const productModel = require('../models/productModel');
 
 const create = async (sales) => {
   const errors = [];
@@ -11,6 +12,7 @@ const create = async (sales) => {
 
   if (errors.length > 0) return errors[0];
 
+  await productModel.updateBySale(mappedSales);
   return saleModel.create({ itensSold: mappedSales });
 };
 
@@ -34,6 +36,9 @@ const update = async (id, sale) => {
 
   if (validatedQuantity) return validatedQuantity;
   
+  // ESTOU AQUI!
+  console.log(id, sale);
+  // await productModel.updateBySale(mappedSales);
   return saleModel.update(id, sale);
 };
 
