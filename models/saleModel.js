@@ -25,7 +25,7 @@ const findById = async (id) => {
 
 const update = async (id, document) => {
   if (!ObjectId.isValid(id)) return false;
-  
+
   const updatedDocument = (await connection())
     .collection(collection)
     .updateOne(
@@ -39,10 +39,20 @@ const update = async (id, document) => {
   return updatedDocument;
 };
 
+const remove = async (id) => {
+  if (!ObjectId.isValid(id)) return false;
+
+  const removedDocument = (await connection())
+    .collection(collection)
+    .deleteOne({ _id: ObjectId(id) });
+
+  return removedDocument;
+};
+
 module.exports = {
   create,
   find,
   findById,
   update,
-  // remove,
+  remove,
 };

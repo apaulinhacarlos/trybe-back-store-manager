@@ -63,10 +63,27 @@ const update = async (req, res, next) => {
   }
 };
 
+const remove = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const foundSale = await saleService.findByIdForRemove(id);
+
+    console.log(foundSale);
+    if (foundSale.err) {
+      return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ err: foundSale.err });
+    }
+
+    await saleService.remove(id);
+    return res.status(StatusCodes.OK).json(foundSale);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   create,
   find,
   findById,
   update,
-  // remove,
+  remove,
 };

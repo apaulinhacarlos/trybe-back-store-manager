@@ -1,5 +1,13 @@
 use('StoreManager');
-db.sales.find();
+db.sales.find(
+  { _id: ObjectId("61980ccc4228ee245bae598e") },
+  { $set: 
+    {
+      itensSold.$: documentWithoutId,
+    },
+  },
+);
+
 
 use('StoreManager');
 db.products.find();
