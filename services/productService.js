@@ -3,7 +3,7 @@ const {
   validateName,
   validateQuantity,
   validateNameInDB,
-} = require('./utils');
+} = require('./productUtils');
 
 const create = async (product) => {
   const validatedName = validateName(product.name);

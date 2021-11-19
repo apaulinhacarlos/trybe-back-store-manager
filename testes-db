@@ -1,4 +1,0 @@
-use('StoreManager');
-db.products.findOne(
-  { _id: 2 }
-)
