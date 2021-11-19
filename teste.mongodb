@@ -1,0 +1,5 @@
+use('StoreManager');
+db.sales.find();
+
+use('StoreManager');
+db.products.find();

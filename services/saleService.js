@@ -29,10 +29,18 @@ const findById = async (id) => {
   return foundSale; 
 };
 
+const update = async (id, sale) => {
+  const validatedQuantity = validateQuantity(sale[0].quantity);
+
+  if (validatedQuantity) return validatedQuantity;
+  
+  return saleModel.update(id, sale);
+};
+
 module.exports = {
   create,
   find,
   findById,
-  // update,
+  update,
   // remove,
 };

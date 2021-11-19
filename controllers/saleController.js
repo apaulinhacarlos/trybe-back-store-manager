@@ -46,10 +46,27 @@ const findById = async (req, res, next) => {
   }
 };
 
+const update = async (req, res, next) => {
+  try {
+    const sale = req.body;
+    const { id } = req.params;
+    const updatedSale = await saleService.update(id, sale);
+
+    if (updatedSale.err && updatedSale.err.code === 'invalid_data') {
+      return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ err: updatedSale.err });
+    }
+   
+    const foundSale = await saleService.findById(id);
+    return res.status(StatusCodes.OK).json(foundSale);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   create,
   find,
   findById,
-  // update,
+  update,
   // remove,
 };

@@ -23,10 +23,26 @@ const findById = async (id) => {
   return foundDocument;
 };
 
+const update = async (id, document) => {
+  if (!ObjectId.isValid(id)) return false;
+  
+  const updatedDocument = (await connection())
+    .collection(collection)
+    .updateOne(
+      { _id: ObjectId(id) },
+      { $set: {
+          itensSold: document,
+        },
+      },
+    );
+
+  return updatedDocument;
+};
+
 module.exports = {
   create,
   find,
   findById,
-  // update,
+  update,
   // remove,
 };
