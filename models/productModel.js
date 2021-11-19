@@ -8,38 +8,43 @@ const create = async (document) => (
   .collection(collection)
   .insertOne(document);
   
-const find = async (filters) => (
+const find = async () => (
   await connection())
     .collection(collection)
-    .find(filters).toArray();
+    .find().toArray();
 
 const findById = async (id) => {
   if (!ObjectId.isValid(id)) return false;
 
-  const product = (await connection())
+  const foundDocument = (await connection())
     .collection(collection)
     .findOne({ _id: ObjectId(id) });
 
-  return product;
+  return foundDocument;
 };
 
-const update = async (document) => {
-  const { id, ...documentWithoutId } = document;
+const update = async ({ id, ...documentWithoutId }) => {
   if (!ObjectId.isValid(id)) return false;
 
-  const product = (await connection())
+  const updatedDocument = (await connection())
     .collection(collection)
     .updateOne(
       { _id: ObjectId(id) },
       { $set: documentWithoutId },
     );
 
-  return product;
+  return updatedDocument;
 };
+
+const remove = async (id) => (
+  await connection())
+    .collection(collection)
+    .deleteOne({ _id: ObjectId(id) });
 
 module.exports = {
   create,
   find,
   findById,
   update,
+  remove,
 };

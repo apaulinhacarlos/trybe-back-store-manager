@@ -6,13 +6,13 @@ const {
 } = require('./utils');
 
 const create = async (product) => {
-  const name = validateName(product.name);
-  const quantity = validateQuantity(product.quantity);
-  const nameInDB = await validateNameInDB(product.name);
+  const validatedName = validateName(product.name);
+  const validatedQuantity = validateQuantity(product.quantity);
+  const validatedNameInDB = await validateNameInDB(product.name);
 
-  if (name) return name;
-  if (quantity) return quantity;
-  if (nameInDB) return nameInDB;
+  if (validatedName) return validatedName;
+  if (validatedQuantity) return validatedQuantity;
+  if (validatedNameInDB) return validatedNameInDB;
 
   return productModel.create(product);
 };
@@ -20,8 +20,8 @@ const create = async (product) => {
 const find = async () => productModel.find();
 
 const findById = async (id) => {
-  const found = await productModel.findById(id);
-  if (!found) {
+  const foundProduct = await productModel.findById(id);
+  if (!foundProduct) {
     return {
       err: {
         code: 'invalid_data',
@@ -29,22 +29,25 @@ const findById = async (id) => {
       },
     };
   }
-  return found; 
+  return foundProduct; 
 };
  
 const update = async (product) => {
-  const name = validateName(product.name);
-  const quantity = validateQuantity(product.quantity);
+  const validatedName = validateName(product.name);
+  const validatedQuantity = validateQuantity(product.quantity);
 
-  if (name) return name;
-  if (quantity) return quantity;
+  if (validatedName) return validatedName;
+  if (validatedQuantity) return validatedQuantity;
 
   return productModel.update(product);
 };
+
+const remove = async (id) => productModel.remove(id);
 
 module.exports = {
   create,
   find,
   findById,
   update,
+  remove,
 };

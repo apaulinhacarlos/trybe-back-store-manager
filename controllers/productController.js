@@ -33,14 +33,13 @@ const find = async (req, res, next) => {
 const findById = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const foundProduct = await productService.findById(id);
 
-    const product = await productService.findById(id);
-
-    if (product.err && product.err.code === 'invalid_data') {
-      return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ err: product.err });
+    if (foundProduct.err && foundProduct.err.code === 'invalid_data') {
+      return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ err: foundProduct.err });
     }
 
-    return res.status(StatusCodes.OK).json(product);
+    return res.status(StatusCodes.OK).json(foundProduct);
   } catch (error) {
     next(error);
   }
@@ -50,15 +49,30 @@ const update = async (req, res, next) => {
   try {
     const { name, quantity } = req.body;
     const { id } = req.params;
+    const updatedProduct = await productService.update({ id, name, quantity });
 
-    const updated = await productService.update({ id, name, quantity });
-
-    if (updated.err && updated.err.code === 'invalid_data') {
-      return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ err: updated.err });
+    if (updatedProduct.err && updatedProduct.err.code === 'invalid_data') {
+      return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ err: updatedProduct.err });
     }
 
-    const product = await productService.findById(id);
-    return res.status(StatusCodes.OK).json(product);
+    const foundProduct = await productService.findById(id);
+    return res.status(StatusCodes.OK).json(foundProduct);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const remove = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const foundProduct = await productService.findById(id);
+
+    if (foundProduct.err && foundProduct.err.code === 'invalid_data') {
+      return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ err: foundProduct.err });
+    }
+
+    await productService.remove(id);
+    return res.status(StatusCodes.OK).json(foundProduct);
   } catch (error) {
     next(error);
   }
@@ -69,4 +83,5 @@ module.exports = {
   find,
   findById,
   update,
+  remove,
 };
