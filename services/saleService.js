@@ -1,16 +1,19 @@
 const saleModel = require('../models/saleModel');
-const { validateQuantity } = require('./salesUtils');
+const { validateQuantity, validateProduct } = require('./salesUtils');
 const productModel = require('../models/productModel');
 
 const create = async (sales) => {
-  const errors = [];
-  const mappedSales = await sales.map((item) => {
+  const error = [];
+  
+  const mappedSales = await Promise.all(sales.map(async (item) => {
     const validatedQuantity = validateQuantity(item.quantity);
-    if (validatedQuantity) errors.push(validatedQuantity);
+    if (validatedQuantity) error.push(validatedQuantity);
+    const productFound = await validateProduct(item);
+    if (productFound) error.push(productFound);
     return item;
-  });
+  }));
 
-  if (errors.length > 0) return errors[0];
+  if (error.length > 0) return error[0];
 
   await productModel.updateBySale(mappedSales);
   return saleModel.create({ itensSold: mappedSales });
@@ -19,8 +22,8 @@ const create = async (sales) => {
 const find = async () => saleModel.find();
 
 const findById = async (id) => {
-  const foundSale = await saleModel.findById(id);
-  if (!foundSale) {
+  const saleFound = await saleModel.findById(id);
+  if (!saleFound) {
     return {
       err: {
         code: 'not_found',
@@ -28,7 +31,7 @@ const findById = async (id) => {
       },
     };
   }
-  return foundSale; 
+  return saleFound; 
 };
 
 const update = async (id, sale) => {
@@ -36,9 +39,6 @@ const update = async (id, sale) => {
 
   if (validatedQuantity) return validatedQuantity;
   
-  // ESTOU AQUI!
-  console.log(id, sale);
-  // await productModel.updateBySale(mappedSales);
   return saleModel.update(id, sale);
 };
 
@@ -48,8 +48,8 @@ const remove = async (id, sale) => {
 };
 
 const findByIdForRemove = async (id) => {
-  const foundSale = await saleModel.findById(id);
-  if (!foundSale) {
+  const saleFound = await saleModel.findById(id);
+  if (!saleFound) {
     return {
       err: {
         code: 'invalid_data',
@@ -57,7 +57,7 @@ const findByIdForRemove = async (id) => {
       },
     };
   }
-  return foundSale; 
+  return saleFound; 
 };
 
 module.exports = {

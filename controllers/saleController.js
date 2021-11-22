@@ -11,6 +11,10 @@ const create = async (req, res, next) => {
       return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ err: newSales.err });
     }
 
+    if (newSales.err && newSales.err.code === 'stock_problem') {
+      return res.status(StatusCodes.NOT_FOUND).json({ err: newSales.err });
+    }
+
     return res.status(StatusCodes.OK).json(newSales.ops[0]);
   } catch (error) {
     next(error);
