@@ -7,12 +7,9 @@ const create = async (req, res, next) => {
 
     const newSales = await saleService.create(sales);
 
-    if (newSales.err && newSales.err.code === 'invalid_data') {
-      return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ err: newSales.err });
-    }
-
-    if (newSales.err && newSales.err.code === 'stock_problem') {
-      return res.status(StatusCodes.NOT_FOUND).json({ err: newSales.err });
+    if (newSales.err) {
+      const { statusCode } = newSales.err;
+      return res.status(statusCode).json({ err: newSales.err });
     }
 
     return res.status(StatusCodes.OK).json(newSales.ops[0]);
