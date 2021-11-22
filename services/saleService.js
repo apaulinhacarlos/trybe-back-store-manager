@@ -42,7 +42,10 @@ const update = async (id, sale) => {
   return saleModel.update(id, sale);
 };
 
-const remove = async (id) => saleModel.remove(id);
+const remove = async (id, sale) => {
+  await productModel.updateBySaleRemoved(sale.itensSold[0]);
+  return saleModel.remove(id);
+};
 
 const findByIdForRemove = async (id) => {
   const foundSale = await saleModel.findById(id);

@@ -68,12 +68,11 @@ const remove = async (req, res, next) => {
     const { id } = req.params;
     const foundSale = await saleService.findByIdForRemove(id);
 
-    console.log(foundSale);
     if (foundSale.err) {
       return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ err: foundSale.err });
     }
 
-    await saleService.remove(id);
+    await saleService.remove(id, foundSale);
     return res.status(StatusCodes.OK).json(foundSale);
   } catch (error) {
     next(error);

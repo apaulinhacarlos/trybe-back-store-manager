@@ -52,6 +52,17 @@ const updateBySale = async (document) => {
   return updatedDocument;
 };
 
+const updateBySaleRemoved = async (document) => {
+  const updatedDocument = (await connection())
+    .collection(collection)
+    .updateOne(
+      { _id: ObjectId(document.productId) },
+      { $inc: { quantity: document.quantity } },
+    );
+
+  return updatedDocument;
+};
+
 module.exports = {
   create,
   find,
@@ -59,4 +70,5 @@ module.exports = {
   update,
   remove,
   updateBySale,
+  updateBySaleRemoved,
 };
