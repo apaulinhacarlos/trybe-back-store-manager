@@ -1,22 +1,22 @@
 const { ObjectId } = require('mongodb');
-const connection = require('./connection');
+const mongoConnection = require('./connection');
 
 const collection = 'sales';
 
 const create = async (document) => (
-  await connection())
+  await mongoConnection.connection())
   .collection(collection)
   .insertOne(document);
 
 const find = async () => (
-  await connection())
+  await mongoConnection.connection())
     .collection(collection)
     .find().toArray();
 
 const findById = async (id) => {
   if (!ObjectId.isValid(id)) return false;
 
-  const foundDocument = (await connection())
+  const foundDocument = (await mongoConnection.connection())
     .collection(collection)
     .findOne({ _id: ObjectId(id) });
 
@@ -26,7 +26,7 @@ const findById = async (id) => {
 const update = async (id, document) => {
   if (!ObjectId.isValid(id)) return false;
 
-  const updatedDocument = (await connection())
+  const updatedDocument = (await mongoConnection.connection())
     .collection(collection)
     .updateOne(
       { _id: ObjectId(id) },
@@ -42,7 +42,7 @@ const update = async (id, document) => {
 const remove = async (id) => {
   if (!ObjectId.isValid(id)) return false;
 
-  const removedDocument = (await connection())
+  const removedDocument = (await mongoConnection.connection())
     .collection(collection)
     .deleteOne({ _id: ObjectId(id) });
 

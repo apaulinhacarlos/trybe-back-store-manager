@@ -9,13 +9,13 @@ const OPTIONS = {
 const MONGO_DB_URL = `mongodb://${process.env.HOST || 'mongodb'}:27017/StoreManager`;
 const DB_NAME = 'StoreManager';
 
-let connection = null;
+let teste = null;
 
-module.exports = async () => {
+const connection = async () => {
   try {
-    const ternary = !connection
-    ? connection = (await MongoClient.connect(MONGO_DB_URL, OPTIONS)).db(DB_NAME)
-    : connection;
+    const ternary = !teste
+    ? teste = (await MongoClient.connect(MONGO_DB_URL, OPTIONS)).db(DB_NAME)
+    : teste;
 
     return ternary;
   } catch (err) {
@@ -23,3 +23,5 @@ module.exports = async () => {
     process.exit(1);
   }
 };
+
+module.exports = { connection };
