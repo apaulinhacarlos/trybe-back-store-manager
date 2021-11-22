@@ -11,3 +11,8 @@ db.sales.find(
 
 use('StoreManager');
 db.products.find();
+
+db.products.updateOne(
+    { _id: ObjectId('619830c0aa435032397e2412') },
+    { $inc: { quantity: 3 } },
+  );
